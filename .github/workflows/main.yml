@@ -14,8 +14,21 @@ jobs:
       run: |
         mv baserom.us.z64.zip baserom.us.z64
 
-    - name: Instalar DevKitPro
-      uses: devkitPro/installer-action@v1
+    - name: Instalar dependencias
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git make python3 unzip wget build-essential
+
+    - name: Instalar devkitPro
+      run: |
+        wget -O - https://apt.devkitpro.org/install-devkitpro-pacman | sudo bash
+        sudo dkp-pacman -S --noconfirm switch-dev devkitA64 libnx switch-sdl2
+
+    - name: Configurar entorno
+      run: |
+        echo "DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
+        echo "DEVKITA64=/opt/devkitpro/devkitA64" >> $GITHUB_ENV
+        echo "/opt/devkitpro/tools/bin:/opt/devkitpro/devkitA64/bin" >> $GITHUB_PATH
 
     - name: Compilar juego
       run: |
