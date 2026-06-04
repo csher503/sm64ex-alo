@@ -1,0 +1,28 @@
+name: Build SM64 para Switch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clonar repositorio
+      uses: actions/checkout@v4
+
+    - name: Restaurar ROM original
+      run: |
+        mv baserom.us.z64.zip baserom.us.z64
+
+    - name: Instalar DevKitPro
+      uses: devkitPro/installer-action@v1
+
+    - name: Compilar juego
+      run: |
+        make TARGET_SWITCH=1
+
+    - name: Subir el NRO
+      uses: actions/upload-artifact@v4
+      with:
+        name: sm64-switch-port
+        path: build/us_nx/sm64.us.f3dex2e.nro
